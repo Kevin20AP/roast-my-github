@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROAST MY GITHUB 🔥</title>
+<meta name="description" content="Type a GitHub username. Jev judges. We roast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🔥</text></svg>">
+</head>
+<body>
+
+<div class="stickers" aria-hidden="true">
+  <span>🔥</span><span>💀</span><span>🪦</span><span>🤡</span><span>☕</span>
+  <span>🔥</span><span>💀</span><span>🪦</span>
+</div>
+
+<main>
+  <section id="landing" class="landing">
+    <h1 class="headline">ROAST MY<br>GITHUB 🔥</h1>
+    <p class="subtitle">Powered by Jev. Judged by math. Emotionally damaged by you.</p>
+
+    <form id="roast-form" autocomplete="off">
+      <input id="username" name="username" class="username-input"
+             placeholder="enter a username… if you dare"
+             aria-label="GitHub username" maxlength="39" required>
+      <button id="roast-button" class="roast-button" type="submit">ROAST ME</button>
+    </form>
+
+    <fieldset class="spice" id="spice">
+      <legend>Spice level</legend>
+      <label><input type="radio" name="spice" value="mild"><span class="chili">🌶<br>Mild</span></label>
+      <label><input type="radio" name="spice" value="medium" checked><span class="chili">🌶🌶<br>Medium</span></label>
+      <label><input type="radio" name="spice" value="spicy"><span class="chili">🌶🌶🌶<br>Extra Spicy</span></label>
+    </fieldset>
+
+    <p id="error" class="error-box" role="alert" hidden></p>
+  </section>
+
+  <section id="loading" class="loading" hidden aria-live="polite">
+    <div class="spinner">🔥</div>
+    <p id="loading-text">Counting your abandoned repos…</p>
+  </section>
+
+  <section id="results" class="results" hidden>
+    <div class="wanted">
+      <p class="wanted-title">WANTED</p>
+      <img id="avatar" class="avatar" alt="" width="180" height="180">
+      <p class="wanted-name" id="wanted-name"></p>
+      <p class="wanted-crime">for crimes against version control</p>
+    </div>
+
+    <div id="stats" class="stat-grid"></div>
+
+    <section class="verdict">
+      <h2>⚖️ JEV'S VERDICT <span class="badge">Powered by Jev</span></h2>
+
+      <div class="verdict-grid">
+        <div class="panel gauge-panel">
+          <h3>Will they finish their next side project?</h3>
+          <div class="gauge"><div id="gauge-fill" class="gauge-fill"></div></div>
+          <p class="gauge-value"><span id="finish-pct">0</span>%</p>
+          <p class="muted">Noul probability, straight from Jev.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Project commitment</h3>
+          <div id="commitment-flames" class="flames"></div>
+          <p class="muted" id="commitment-label"></p>
+        </div>
+
+        <div class="panel">
+          <h3>Commit message quality</h3>
+          <div id="quality-flames" class="flames"></div>
+          <p class="muted" id="quality-label"></p>
+        </div>
+
+        <div class="panel card-panel">
+          <div class="trading-card">
+            <p class="card-kicker">DEVELOPER ARCHETYPE</p>
+            <p class="card-title" id="archetype-name"></p>
+            <p class="card-text" id="archetype-desc"></p>
+            <p class="card-confidence">Jev confidence: <span id="archetype-confidence"></span>%</p>
+          </div>
+          <div id="archetype-bars" class="prob-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tombstone-area" class="tombstone-area" hidden>
+      <svg class="tombstone" viewBox="0 0 300 260" role="img" aria-labelledby="tomb-caption">
+        <path d="M30 250 V110 A120 110 0 0 1 270 110 V250 Z" fill="#d9d4c7" stroke="#000" stroke-width="6"/>
+        <path d="M0 250 H300 V260 H0 Z" fill="#B6FF3B" stroke="#000" stroke-width="6"/>
+        <text x="150" y="95" text-anchor="middle" font-size="38" font-family="Rubik Mono One, sans-serif">R.I.P.</text>
+        <text id="tomb-repo" x="150" y="140" text-anchor="middle" font-size="20" font-weight="700" font-family="Space Grotesk, sans-serif"></text>
+        <text id="tomb-dates" x="150" y="175" text-anchor="middle" font-size="15" font-family="Space Grotesk, sans-serif"></text>
+        <text id="tomb-commits" x="150" y="205" text-anchor="middle" font-size="14" font-family="Space Grotesk, sans-serif"></text>
+      </svg>
+      <p id="tomb-caption" class="muted"></p>
+    </section>
+
+    <section class="roast-area">
+      <h2>🎤 THE ROAST</h2>
+      <ol id="roast-lines" class="roast-lines"></ol>
+      <div class="actions">
+        <button id="replay" class="chunky pink" type="button">🔁 Replay</button>
+        <button id="again" class="chunky cyan" type="button">🎯 Roast another victim</button>
+        <button id="copy" class="chunky lime" type="button">📋 Copy roast</button>
+      </div>
+      <p id="voice-note" class="muted"></p>
+    </section>
+  </section>
+</main>
+
+<footer>
+  <p>Roasts are generated from public GitHub data by code templates. Verdicts and
+     probabilities come from <strong>Jev</strong> (TypeSafe System One). Voice by ElevenLabs.</p>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
