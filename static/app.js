@@ -23,6 +23,10 @@ let audio = null;
 let stopKaraoke = null;
 let currentRoast = [];
 
+function currentSpice() {
+  return document.querySelector('input[name="spice"]:checked').value;
+}
+
 /* ---------------- flow ---------------- */
 
 form.addEventListener("submit", async (event) => {
@@ -40,7 +44,7 @@ form.addEventListener("submit", async (event) => {
     const response = await fetch("/api/roast", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, spice: "medium" }),
+      body: JSON.stringify({ username, spice: currentSpice() }),
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "Something broke. Ironic.");
@@ -92,6 +96,7 @@ function render(data) {
 
   renderStats(data.facts);
   renderVerdict(data.jev);
+  renderTombstone(data.tombstone);
   renderLines(data.roast);
   voiceNote.textContent = "";
   results.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
@@ -177,6 +182,25 @@ function flames(elementId, score) {
   }
 }
 
+function renderTombstone(tombstone) {
+  const area = document.getElementById("tombstone-area");
+  if (!tombstone) {
+    area.hidden = true;
+    return;
+  }
+  area.hidden = false;
+  document.getElementById("tomb-repo").textContent = tombstone.repo;
+  document.getElementById("tomb-dates").textContent =
+    `Born ${tombstone.born} · Died ${tombstone.died}`;
+  document.getElementById("tomb-commits").textContent = tombstone.commits
+    ? `Survived by ${tombstone.commits} commits.`
+    : "Survived by nobody.";
+  document.getElementById("tomb-caption").textContent =
+    `Jev picked this one as the most embarrassing or abandoned repo (${Math.round(
+      tombstone.confidence * 100
+    )}% confidence).`;
+}
+
 function renderLines(lines) {
   list.innerHTML = "";
   lines.forEach((line) => {
@@ -257,6 +281,22 @@ function finish() {
   if (stopKaraoke) stopKaraoke();
   stopKaraoke = null;
   highlight(-1);
+  emojiRain();
+}
+
+function emojiRain(count = 34) {
+  if (reducedMotion) return;
+  for (let i = 0; i < count; i += 1) {
+    const drop = document.createElement("span");
+    drop.className = "rain-drop";
+    drop.textContent = "🔥";
+    drop.style.left = `${Math.random() * 100}vw`;
+    drop.style.fontSize = `${1.4 + Math.random() * 2}rem`;
+    drop.style.animationDuration = `${2 + Math.random() * 2.5}s`;
+    drop.style.animationDelay = `${Math.random() * 1.2}s`;
+    drop.addEventListener("animationend", () => drop.remove());
+    document.body.appendChild(drop);
+  }
 }
 
 /* ---------------- buttons ---------------- */

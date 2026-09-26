@@ -96,17 +96,17 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
                 "mild": [
                     f"{stars} stars across {repos} {repo_word}. Genuinely impressive.",
                     f"{stars} stars. People actually use this stuff. Congratulations.",
-                    f"{repos} repos, {stars} stars. The internet approves.",
+                    f"{repos} {repo_word}, {stars} stars. The internet approves.",
                 ],
                 "medium": [
                     f"{stars} stars. Fine. You win this round. I'll find something else.",
-                    f"{stars} stars across {repos} repos, and you still can't write a description for {nodesc} of them.",
+                    f"{stars} stars across {repos} {repo_word}. Impressive numbers for someone who commits like that.",
                     f"{stars} stars. Popularity is not the same as maintenance, and we both know it.",
                 ],
                 "spicy": [
                     f"{stars} stars. Thousands of people starred this and roughly none of them read the code.",
-                    f"{stars} stars and {stale} {_plural(stale, 'repo')} rotting in the background. Fame is a distraction.",
-                    f"{stars} stars, and {nodesc} {_plural(nodesc, 'repo')} still can't be bothered with a description.",
+                    f"{stars} stars across {repos} {repo_word}. Popularity bought you exactly zero discipline.",
+                    f"{stars} stars. Congratulations, more people have starred your code than have run it.",
                 ],
             },
         ),
@@ -115,17 +115,17 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
             {
                 "mild": [
                     f"{repos} public {repo_word} and {stars} stars. Quality over quantity, right?",
-                    f"{repos} repos, {stars} total stars. The stars will come. Someday.",
-                    f"{repos} repositories out there earning a combined {stars} stars.",
+                    f"{repos} {repo_word}, {stars} total stars. The stars will come. Someday.",
+                    f"{repos} {_plural(repos, 'repository', 'repositories')} out there earning a combined {stars} stars.",
                 ],
                 "medium": [
-                    f"{repos} repos. {stars} total stars. That's not a portfolio, that's a cry for help.",
-                    f"{repos} repositories and {stars} stars between them. The math is not flattering.",
-                    f"You shipped {repos} repos and the internet responded with {stars} stars. Deafening.",
+                    f"{repos} {repo_word}. {stars} total stars. That's not a portfolio, that's a cry for help.",
+                    f"{repos} {_plural(repos, 'repository', 'repositories')} and {stars} stars between them. The math is not flattering.",
+                    f"You shipped {repos} {repo_word} and the internet responded with {stars} stars. Deafening.",
                 ],
                 "spicy": [
-                    f"{repos} repos. {stars} stars. That's not a portfolio, that's a landfill with a README.",
-                    f"{stars} stars across {repos} repositories. Even your own account is not clicking the button.",
+                    f"{repos} {repo_word}. {stars} stars. That's not a portfolio, that's a landfill with a README.",
+                    f"{stars} stars across {repos} {_plural(repos, 'repository', 'repositories')}. Even your own account is not clicking the button.",
                     f"{repos} public repos, {stars} stars. You are not building software, you are building evidence.",
                 ],
             },
@@ -160,12 +160,12 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
                 ],
                 "medium": [
                     f"{stale} {stale_word} haven't been touched in over a year. They're not projects, they're fossils.",
-                    f"{stale} repositories are older than a year since their last push. Archaeology, not engineering.",
+                    f"{stale} {_plural(stale, 'repository', 'repositories')} {'is' if stale == 1 else 'are'} older than a year since the last push. Archaeology, not engineering.",
                     f"{stale} of your repos have been silent for 365+ days. That's not a codebase, that's a time capsule.",
                 ],
                 "spicy": [
                     f"{stale} {stale_word} untouched for over a year. That's not a portfolio, that's a cemetery with commit history.",
-                    f"{stale} abandoned repositories. Somewhere, {stale} READMEs are still promising 'coming soon'.",
+                    f"{stale} abandoned {_plural(stale, 'repository', 'repositories')}. Somewhere, {stale} {_plural(stale, 'README')} {'is' if stale == 1 else 'are'} still promising 'coming soon'.",
                     f"{stale} {stale_word} haven't been pushed to in a year. Their last commit was a goodbye note and nobody noticed.",
                 ],
             },
@@ -236,17 +236,17 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
                 "mild": [
                     f"{forks} {_plural(forks, 'fork')} you never modified. Collecting is a hobby too.",
                     f"{forks} untouched {_plural(forks, 'fork')}. They're for later. Definitely later.",
-                    f"You forked {forks} repos and left them exactly as found. Very respectful.",
+                    f"You forked {forks} {_plural(forks, 'repo')} and left them exactly as found. Very respectful.",
                 ],
                 "medium": [
                     f"{forks} {_plural(forks, 'fork')} with zero changes. Forking is not contributing.",
-                    f"{forks} repositories forked and never touched. That's bookmarking with extra steps.",
+                    f"{forks} {_plural(forks, 'repository', 'repositories')} forked and never touched. That's bookmarking with extra steps.",
                     f"{forks} pristine forks. You clicked a button and called it open source.",
                 ],
                 "spicy": [
                     f"{forks} {_plural(forks, 'fork')}, zero commits. You're not contributing, you're hoarding other people's work.",
                     f"{forks} untouched forks sitting in your account like trophies you didn't win.",
-                    f"{forks} forks you never modified. Somewhere a maintainer felt a chill and didn't know why.",
+                    f"{forks} {_plural(forks, 'fork')} you never modified. Somewhere a maintainer felt a chill and didn't know why.",
                 ],
             },
         ),
@@ -255,13 +255,13 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
             {
                 "mild": [
                     f"{sketchy} {_plural(sketchy, 'repo')} named things like {sketchy_name!r}. Naming is hard.",
-                    f"{sketchy} repo names in the 'test / final / v2' family. Classic.",
+                    f"{sketchy} repo {_plural(sketchy, 'name')} in the 'test / final / v2' family. Classic.",
                     f"Found {sketchy} placeholder-ish repo {_plural(sketchy, 'name')}, starting with {sketchy_name!r}.",
                 ],
                 "medium": [
                     f"{sketchy} {_plural(sketchy, 'repo')} named like temp files. {sketchy_name!r} was shipped to the production of the soul.",
                     f"{sketchy} {_plural(sketchy, 'repository', 'repositories')} carry names like {sketchy_name!r}. Version control has a rename command.",
-                    f"{sketchy} repo {_plural(sketchy, 'name')} contain 'test', 'final' or 'v2'. None of them were final.",
+                    f"{sketchy} repo {_plural(sketchy, 'name')} {'contains' if sketchy == 1 else 'contain'} 'test', 'final' or 'v2'. None of them were final.",
                 ],
                 "spicy": [
                     f"{sketchy} {_plural(sketchy, 'repo')} named like unsaved documents. {sketchy_name!r} is not a project, it's a hostage.",
@@ -281,11 +281,11 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
                 "medium": [
                     f"{nodesc} {_plural(nodesc, 'repo')} with no description. The code is self-documenting, apparently.",
                     f"{nodesc} {_plural(nodesc, 'repository', 'repositories')} with an empty description field. Bold assumption that anyone can guess.",
-                    f"{nodesc} {_plural(nodesc, 'repo')} tell visitors nothing. The README is a rumour.",
+                    f"{nodesc} {_plural(nodesc, 'repo')} {'tells' if nodesc == 1 else 'tell'} visitors nothing. The README is a rumour.",
                 ],
                 "spicy": [
                     f"{nodesc} {_plural(nodesc, 'repo')} with no description. You published mystery boxes and called it a portfolio.",
-                    f"{nodesc} {_plural(nodesc, 'repository', 'repositories')} explain nothing. Not to me, not to recruiters, not to you in six months.",
+                    f"{nodesc} {_plural(nodesc, 'repository', 'repositories')} {'explains' if nodesc == 1 else 'explain'} nothing. Not to me, not to recruiters, not to you in six months.",
                     f"{nodesc} description-free {_plural(nodesc, 'repo')}. Even you don't remember what they do.",
                 ],
             },
@@ -359,7 +359,7 @@ def _joke_bank(facts: dict, verdicts: dict) -> list[tuple[bool, dict]]:
                     f"On GitHub for {age} years with {stars} stars to show. It's a journey.",
                 ],
                 "medium": [
-                    f"{age} years on GitHub for {repos} repos and {stars} stars. That's a slow burn.",
+                    f"{age} years on GitHub for {repos} {repo_word} and {stars} stars. That's a slow burn.",
                     f"{age} years of account age. The account matured. The commit messages did not.",
                     f"{age} years on GitHub and the highlight reel is {stars} stars. Efficient.",
                 ],

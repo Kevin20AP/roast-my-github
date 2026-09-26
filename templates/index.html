@@ -30,6 +30,13 @@
       <button id="roast-button" class="roast-button" type="submit">ROAST ME</button>
     </form>
 
+    <fieldset class="spice" id="spice">
+      <legend>Spice level</legend>
+      <label><input type="radio" name="spice" value="mild"><span class="chili">🌶<br>Mild</span></label>
+      <label><input type="radio" name="spice" value="medium" checked><span class="chili">🌶🌶<br>Medium</span></label>
+      <label><input type="radio" name="spice" value="spicy"><span class="chili">🌶🌶🌶<br>Extra Spicy</span></label>
+    </fieldset>
+
     <p id="error" class="error-box" role="alert" hidden></p>
   </section>
 
@@ -81,6 +88,18 @@
           <div id="archetype-bars" class="prob-bars"></div>
         </div>
       </div>
+    </section>
+
+    <section id="tombstone-area" class="tombstone-area" hidden>
+      <svg class="tombstone" viewBox="0 0 300 260" role="img" aria-labelledby="tomb-caption">
+        <path d="M30 250 V110 A120 110 0 0 1 270 110 V250 Z" fill="#d9d4c7" stroke="#000" stroke-width="6"/>
+        <path d="M0 250 H300 V260 H0 Z" fill="#B6FF3B" stroke="#000" stroke-width="6"/>
+        <text x="150" y="95" text-anchor="middle" font-size="38" font-family="Rubik Mono One, sans-serif">R.I.P.</text>
+        <text id="tomb-repo" x="150" y="140" text-anchor="middle" font-size="20" font-weight="700" font-family="Space Grotesk, sans-serif"></text>
+        <text id="tomb-dates" x="150" y="175" text-anchor="middle" font-size="15" font-family="Space Grotesk, sans-serif"></text>
+        <text id="tomb-commits" x="150" y="205" text-anchor="middle" font-size="14" font-family="Space Grotesk, sans-serif"></text>
+      </svg>
+      <p id="tomb-caption" class="muted"></p>
     </section>
 
     <section class="roast-area">

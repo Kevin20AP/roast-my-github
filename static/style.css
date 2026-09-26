@@ -193,7 +193,12 @@ h1, h2, h3, .headline, .roast-button, .chunky, .stat-value, .card-title {
 .stat-card:nth-child(4n+2) { background: var(--cyan); }
 .stat-card:nth-child(4n+3) { background: var(--lime); }
 .stat-card:nth-child(4n+4) { background: var(--yellow); }
-.stat-value { display: block; font-size: 1.7rem; line-height: 1.1; }
+.stat-value {
+  display: block;
+  font-size: clamp(1.1rem, 4.2vw, 1.7rem);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
 .stat-label { display: block; margin-top: .35rem; font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
 
 @keyframes pop {
@@ -241,7 +246,13 @@ h1, h2, h3, .headline, .roast-button, .chunky, .stat-value, .card-title {
 .gauge-fill {
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), var(--lime), var(--yellow), var(--pink));
+  background: repeating-linear-gradient(
+    90deg,
+    var(--cyan) 0 2rem,
+    var(--lime) 2rem 4rem,
+    var(--yellow) 4rem 6rem,
+    var(--pink) 6rem 8rem
+  );
   border-right: var(--border);
   transition: width 1.2s cubic-bezier(.2, .9, .2, 1);
 }
@@ -335,4 +346,65 @@ footer {
     transition-duration: .001ms !important;
   }
   .headline { transform: rotate(-3deg); }
+}
+
+/* ---------- spice toggle ---------- */
+.spice {
+  display: inline-flex;
+  gap: 1rem;
+  margin: 2rem auto 0;
+  padding: .8rem 1.2rem;
+  background: #fff;
+  border: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.spice legend {
+  padding: .1rem .5rem;
+  background: var(--purple);
+  color: #fff;
+  border: var(--border);
+  font-weight: 700;
+  font-size: .8rem;
+  text-transform: uppercase;
+}
+.spice label { cursor: pointer; }
+.spice input { position: absolute; opacity: 0; width: 0; height: 0; }
+.chili {
+  display: block;
+  padding: .5rem .7rem;
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  background: var(--cream);
+  border: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: rotate(-2deg);
+  transition: transform .15s ease-out, background .15s ease-out;
+}
+.spice label:nth-child(3) .chili { transform: rotate(1.5deg); }
+.spice label:nth-child(4) .chili { transform: rotate(-1deg); }
+.spice label:hover .chili { transform: scale(1.06) rotate(0deg); }
+.spice input:checked + .chili { background: var(--pink); color: #fff; transform: scale(1.1) rotate(0deg); }
+.spice input:focus-visible + .chili { outline: 4px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- tombstone ---------- */
+.tombstone-area { margin: 0 auto 3rem; max-width: 22rem; text-align: center; }
+.tombstone { width: 100%; height: auto; filter: drop-shadow(6px 6px 0 #000); animation: sway 5s ease-in-out infinite; }
+@keyframes sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%      { transform: rotate(1.5deg); }
+}
+
+/* ---------- emoji rain ---------- */
+.rain-drop {
+  position: fixed;
+  top: -3rem;
+  z-index: 50;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: fall linear forwards;
+}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(320deg); opacity: .2; }
 }
