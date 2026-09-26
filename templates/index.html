@@ -3,24 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Roast My GitHub</title>
+<title>ROAST MY GITHUB 🔥</title>
+<meta name="description" content="Type a GitHub username. Jev judges. We roast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🔥</text></svg>">
 </head>
 <body>
+
+<div class="stickers" aria-hidden="true">
+  <span>🔥</span><span>💀</span><span>🪦</span><span>🤡</span><span>☕</span>
+  <span>🔥</span><span>💀</span><span>🪦</span>
+</div>
+
 <main>
-  <h1>ROAST MY GITHUB 🔥</h1>
-  <p>Powered by Jev. Judged by math. Emotionally damaged by you.</p>
-  <form id="roast-form">
-    <input id="username" placeholder="enter a username… if you dare" autocomplete="off" required>
-    <button type="submit">ROAST ME</button>
-  </form>
-  <p id="status" hidden></p>
-  <section id="results" hidden>
-    <ol id="roast-lines"></ol>
-    <h2>⚖️ Jev's verdict</h2>
-    <pre id="verdict"></pre>
+  <section id="landing" class="landing">
+    <h1 class="headline">ROAST MY<br>GITHUB 🔥</h1>
+    <p class="subtitle">Powered by Jev. Judged by math. Emotionally damaged by you.</p>
+
+    <form id="roast-form" autocomplete="off">
+      <input id="username" name="username" class="username-input"
+             placeholder="enter a username… if you dare"
+             aria-label="GitHub username" maxlength="39" required>
+      <button id="roast-button" class="roast-button" type="submit">ROAST ME</button>
+    </form>
+
+    <p id="error" class="error-box" role="alert" hidden></p>
+  </section>
+
+  <section id="loading" class="loading" hidden aria-live="polite">
+    <div class="spinner">🔥</div>
+    <p id="loading-text">Counting your abandoned repos…</p>
+  </section>
+
+  <section id="results" class="results" hidden>
+    <div class="wanted">
+      <p class="wanted-title">WANTED</p>
+      <img id="avatar" class="avatar" alt="" width="180" height="180">
+      <p class="wanted-name" id="wanted-name"></p>
+      <p class="wanted-crime">for crimes against version control</p>
+    </div>
+
+    <div id="stats" class="stat-grid"></div>
+
+    <section class="verdict">
+      <h2>⚖️ JEV'S VERDICT <span class="badge">Powered by Jev</span></h2>
+
+      <div class="verdict-grid">
+        <div class="panel gauge-panel">
+          <h3>Will they finish their next side project?</h3>
+          <div class="gauge"><div id="gauge-fill" class="gauge-fill"></div></div>
+          <p class="gauge-value"><span id="finish-pct">0</span>%</p>
+          <p class="muted">Noul probability, straight from Jev.</p>
+        </div>
+
+        <div class="panel">
+          <h3>Project commitment</h3>
+          <div id="commitment-flames" class="flames"></div>
+          <p class="muted" id="commitment-label"></p>
+        </div>
+
+        <div class="panel">
+          <h3>Commit message quality</h3>
+          <div id="quality-flames" class="flames"></div>
+          <p class="muted" id="quality-label"></p>
+        </div>
+
+        <div class="panel card-panel">
+          <div class="trading-card">
+            <p class="card-kicker">DEVELOPER ARCHETYPE</p>
+            <p class="card-title" id="archetype-name"></p>
+            <p class="card-text" id="archetype-desc"></p>
+            <p class="card-confidence">Jev confidence: <span id="archetype-confidence"></span>%</p>
+          </div>
+          <div id="archetype-bars" class="prob-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roast-area">
+      <h2>🎤 THE ROAST</h2>
+      <ol id="roast-lines" class="roast-lines"></ol>
+      <div class="actions">
+        <button id="replay" class="chunky pink" type="button">🔁 Replay</button>
+        <button id="again" class="chunky cyan" type="button">🎯 Roast another victim</button>
+        <button id="copy" class="chunky lime" type="button">📋 Copy roast</button>
+      </div>
+      <p id="voice-note" class="muted"></p>
+    </section>
   </section>
 </main>
+
+<footer>
+  <p>Roasts are generated from public GitHub data by code templates. Verdicts and
+     probabilities come from <strong>Jev</strong> (TypeSafe System One). Voice by ElevenLabs.</p>
+</footer>
+
 <script src="/static/app.js"></script>
 </body>
 </html>
