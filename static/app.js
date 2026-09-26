@@ -199,9 +199,15 @@ function renderTombstone(tombstone) {
     return;
   }
   area.hidden = false;
-  const repo =
+  const repoText = document.getElementById("tomb-repo");
+  repoText.textContent =
     tombstone.repo.length > 24 ? `${tombstone.repo.slice(0, 23)}…` : tombstone.repo;
-  document.getElementById("tomb-repo").textContent = repo;
+  // Squeeze anything still too wide into the stone instead of over its edges.
+  repoText.removeAttribute("textLength");
+  repoText.setAttribute("lengthAdjust", "spacingAndGlyphs");
+  if (repoText.getComputedTextLength() > 200) {
+    repoText.setAttribute("textLength", "200");
+  }
   document.getElementById("tomb-dates").textContent =
     `Born ${tombstone.born} · Died ${tombstone.died}`;
   document.getElementById("tomb-commits").textContent =
