@@ -14,6 +14,17 @@ Type a GitHub username, and calibrated AI verdicts from **Jev** turn your public
 
 Roasts target code and GitHub habits only — never anything personal.
 
+## Tools used
+
+| Tool | Role |
+| --- | --- |
+| [Jev (TypeSafe AI)](https://typesafe.ai) | Calibrated Choice / Noul / Score judgments over the GitHub facts |
+| [ElevenLabs](https://elevenlabs.io) | Text-to-speech for the roast (`eleven_flash_v2_5`) |
+| [GitHub REST API](https://docs.github.com/rest) | Public profile, repository and commit data |
+| [Devin](https://devin.ai) | Built the app, tests and this README |
+| [CodeRabbit](https://coderabbit.ai) | AI code review on the pull request |
+| Python, Flask, vanilla HTML/CSS/JS | Backend and no-build single-page frontend |
+
 ## Setup and run
 
 ```bash
@@ -63,4 +74,4 @@ Jev's confidence for every answer is displayed in the UI, so you can see the mod
 | `POST /api/roast` | `{"username": "...", "spice": "mild\|medium\|spicy"}` → facts, Jev verdicts, roast lines, tombstone |
 | `POST /api/voice` | `{"lines": [...]}` → `audio/mpeg` |
 
-The last 10 roasts are cached in memory for 15 minutes so demo usernames load instantly.
+The last 10 roasts are cached in memory for 15 minutes so demo usernames load instantly. To protect the paid Jev and ElevenLabs quotas, each client IP is limited to 10 uncached roasts and 20 voice requests per minute.
