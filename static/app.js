@@ -199,17 +199,23 @@ function renderTombstone(tombstone) {
     return;
   }
   area.hidden = false;
-  document.getElementById("tomb-repo").textContent = tombstone.repo;
+  const repo =
+    tombstone.repo.length > 24 ? `${tombstone.repo.slice(0, 23)}…` : tombstone.repo;
+  document.getElementById("tomb-repo").textContent = repo;
   document.getElementById("tomb-dates").textContent =
     `Born ${tombstone.born} · Died ${tombstone.died}`;
   document.getElementById("tomb-commits").textContent =
     tombstone.commits == null
-      ? "Commit count unknown. Nobody looked."
-      : `Survived by ${tombstone.commits} commits in the sampled history.`;
+      ? "Commits: unknown"
+      : `Sampled commits: ${tombstone.commits}`;
+  const sampling =
+    tombstone.commits == null
+      ? " We never sampled this repo's commits, so the count is unknown."
+      : " That count is from the sampled commits we read, not its whole history.";
   document.getElementById("tomb-caption").textContent =
     `Jev picked this one as the most embarrassing or abandoned repo (${Math.round(
       tombstone.confidence * 100
-    )}% confidence).`;
+    )}% confidence).${sampling}`;
 }
 
 function renderLines(lines) {
@@ -332,9 +338,13 @@ document.getElementById("again").addEventListener("click", () => {
 });
 
 document.getElementById("copy").addEventListener("click", async (event) => {
-  await navigator.clipboard.writeText(currentRoast.join("\n"));
   const target = event.currentTarget;
-  target.textContent = "✅ Copied!";
+  try {
+    await navigator.clipboard.writeText(currentRoast.join("\n"));
+    target.textContent = "✅ Copied!";
+  } catch (error) {
+    target.textContent = "❌ Clipboard said no";
+  }
   setTimeout(() => {
     target.textContent = "📋 Copy roast";
   }, 1500);
