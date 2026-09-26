@@ -22,6 +22,9 @@ let loadingTimer = null;
 let audio = null;
 let stopKaraoke = null;
 let currentRoast = [];
+let audioUrl = null;
+let playbackGeneration = 0;
+let voiceAbort = new AbortController();
 
 function currentSpice() {
   return document.querySelector('input[name="spice"]:checked').value;
@@ -75,11 +78,18 @@ function stopLoading() {
 }
 
 function stopEverything() {
+  playbackGeneration += 1;
+  voiceAbort.abort();
+  voiceAbort = new AbortController();
   if (stopKaraoke) stopKaraoke();
   stopKaraoke = null;
   if (audio) {
     audio.pause();
     audio = null;
+  }
+  if (audioUrl) {
+    URL.revokeObjectURL(audioUrl);
+    audioUrl = null;
   }
   window.speechSynthesis?.cancel();
 }
@@ -192,9 +202,10 @@ function renderTombstone(tombstone) {
   document.getElementById("tomb-repo").textContent = tombstone.repo;
   document.getElementById("tomb-dates").textContent =
     `Born ${tombstone.born} · Died ${tombstone.died}`;
-  document.getElementById("tomb-commits").textContent = tombstone.commits
-    ? `Survived by ${tombstone.commits} commits.`
-    : "Survived by nobody.";
+  document.getElementById("tomb-commits").textContent =
+    tombstone.commits == null
+      ? "Commit count unknown. Nobody looked."
+      : `Survived by ${tombstone.commits} commits in the sampled history.`;
   document.getElementById("tomb-caption").textContent =
     `Jev picked this one as the most embarrassing or abandoned repo (${Math.round(
       tombstone.confidence * 100
@@ -242,14 +253,20 @@ function karaoke(lines, duration, currentTime) {
 
 async function play(lines) {
   stopEverything();
+  const generation = playbackGeneration;
   try {
     const response = await fetch("/api/voice", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ lines }),
+      signal: voiceAbort.signal,
     });
     if (!response.ok) throw new Error("voice unavailable");
-    audio = new Audio(URL.createObjectURL(await response.blob()));
+    const blob = await response.blob();
+    if (generation !== playbackGeneration) return;
+
+    audioUrl = URL.createObjectURL(blob);
+    audio = new Audio(audioUrl);
     audio.addEventListener("loadedmetadata", () => {
       stopKaraoke = karaoke(lines, audio.duration, () => audio.currentTime);
     });
@@ -257,6 +274,7 @@ async function play(lines) {
     await audio.play();
     voiceNote.textContent = "Voice by ElevenLabs.";
   } catch (error) {
+    if (generation !== playbackGeneration) return;
     voiceNote.textContent = "ElevenLabs is unavailable, so your browser is doing the honours.";
     speak(lines);
   }

@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 import requests
 
 API = "https://api.github.com"
+REPO_PAGE_SIZE = 100
+REPO_PAGE_LIMIT = 5
 COMMIT_REPO_LIMIT = 5
 COMMITS_PER_REPO = 30
 SUSPICIOUS_NAME_RE = re.compile(
@@ -66,12 +68,33 @@ def _get(session: requests.Session, path: str, **params: object) -> object:
             "Grab a coffee ☕ and try again in a minute.",
             429,
         )
+    if response.status_code == 409:
+        raise GitHubError("Repository is empty.", 409)
     if not response.ok:
         raise GitHubError(
             f"GitHub returned {response.status_code} and no explanation. Relatable.",
             502,
         )
     return response.json()
+
+
+def _all_repos(session: requests.Session, username: str) -> list[dict]:
+    repos: list[dict] = []
+    for page in range(1, REPO_PAGE_LIMIT + 1):
+        batch = _get(
+            session,
+            f"/users/{username}/repos",
+            per_page=REPO_PAGE_SIZE,
+            sort="pushed",
+            type="owner",
+            page=page,
+        )
+        if not isinstance(batch, list) or not batch:
+            break
+        repos.extend(batch)
+        if len(batch) < REPO_PAGE_SIZE:
+            break
+    return repos
 
 
 def _parse(stamp: str | None) -> datetime | None:
@@ -91,11 +114,7 @@ def collect_facts(username: str) -> dict:
     """Return a flat, JSON-serializable dict of facts about ``username``."""
     session = _session()
     user = _get(session, f"/users/{username}")
-    repos = _get(
-        session, f"/users/{username}/repos", per_page=100, sort="pushed", type="owner"
-    )
-    if not isinstance(repos, list):
-        repos = []
+    repos = _all_repos(session, username)
 
     login = user["login"]
     own_repos = [r for r in repos if not r.get("fork")]
@@ -128,8 +147,10 @@ def collect_facts(username: str) -> dict:
                 f"/repos/{login}/{repo['name']}/commits",
                 per_page=COMMITS_PER_REPO,
             )
-        except GitHubError:
-            continue  # empty repo, DMCA'd repo, whatever - keep roasting
+        except GitHubError as exc:
+            if exc.status in (404, 409):
+                continue  # empty or vanished repo - keep roasting
+            raise
         if not isinstance(commits, list):
             continue
         commits_by_repo[repo["name"]] = len(commits)

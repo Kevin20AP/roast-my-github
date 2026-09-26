@@ -30,6 +30,32 @@ CACHE_TTL_SECONDS = 15 * 60
 _cache: "OrderedDict[tuple[str, str], tuple[float, dict]]" = OrderedDict()
 _cache_lock = Lock()
 
+# Both API routes spend paid third-party quota (TypeSafe, ElevenLabs), so each
+# client IP gets a small burst per window.
+RATE_LIMIT_WINDOW_SECONDS = 60
+RATE_LIMITS = {"/api/roast": 10, "/api/voice": 20}
+_hits: dict[tuple[str, str], list[float]] = {}
+_hits_lock = Lock()
+
+
+def _rate_limited(route: str) -> bool:
+    limit = RATE_LIMITS[route]
+    client = request.headers.get("X-Forwarded-For", request.remote_addr or "?")
+    client = client.split(",")[0].strip()
+    now = time.time()
+    with _hits_lock:
+        recent = [
+            hit
+            for hit in _hits.get((client, route), [])
+            if now - hit < RATE_LIMIT_WINDOW_SECONDS
+        ]
+        if len(recent) >= limit:
+            _hits[(client, route)] = recent
+            return True
+        recent.append(now)
+        _hits[(client, route)] = recent
+    return False
+
 
 def _cache_get(key: tuple[str, str]) -> dict | None:
     with _cache_lock:
@@ -90,6 +116,18 @@ def create_roast():
     cached = _cache_get(key)
     if cached:
         return jsonify({**cached, "cached": True})
+
+    # Only uncached roasts spend Jev quota, so only those are throttled.
+    if _rate_limited("/api/roast"):
+        return (
+            jsonify(
+                {
+                    "error": "Slow down. Even our roasting machine needs to breathe. "
+                    "Try again in a minute.",
+                }
+            ),
+            429,
+        )
 
     try:
         facts = github_facts.collect_facts(username)
@@ -164,6 +202,9 @@ def _tombstone(facts: dict, verdicts: dict) -> dict | None:
 
 @app.post("/api/voice")
 def voice():
+    if _rate_limited("/api/voice"):
+        return jsonify({"error": "Too many voice requests. Let it cool down."}), 429
+
     body = request.get_json(silent=True) or {}
     lines = body.get("lines") or []
     if not isinstance(lines, list) or not lines:
